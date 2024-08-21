@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+    <div id="chat-window" class="chat-window"></div>
+    <input type="text" id="chat-input" placeholder="Type your message..." onkeydown="handleMessageInput(event)" />
+    <button onclick="sendMessage()">Send</button>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/static/js/chat.js"></script>
+</body>
+
+</html>
