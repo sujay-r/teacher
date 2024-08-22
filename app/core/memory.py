@@ -11,11 +11,14 @@ class Memory(ABC):
         '''Adds given object to memory'''
 
 
+def default_conversation_history() -> list:
+    return []
+
 class ConversationMemory(Memory):
-    def __init__(self, existing_history: Optional[List[Dict[str, str]]]=None) -> None:
+    def __init__(self, existing_history: Optional[List[ConversationTurn]]=None) -> None:
         self.conversation_history = []
-        if existing_history:
-            self.conversation_history = ConversationMemory.normalize_raw_conversation_history(existing_history)
+        if existing_history:  # Can't use a blank list as default because it causes memory leaks.
+            self.conversation_history = existing_history
 
     @staticmethod
     def initialise_from_existing_conversation_history(conversation_history: List[Dict[str, str]]) -> 'ConversationMemory':
@@ -54,18 +57,3 @@ class ConversationMemory(Memory):
     # TODO: Abstract this responsibility to a data factory class
     def create_llm_turn_from_message(self, llm_response: str) -> ConversationTurn:
         return ConversationTurn(role=Speaker.AGENT.value, content=llm_response)
-
-    def get_last_llm_response(self) -> str:
-        last_dialogue = self.get_last_dialogue()
-
-        llm_response = ''
-        if self.is_dialogue_from_llm(last_dialogue):
-            llm_response = last_dialogue.message
-
-        return llm_response
-
-    def is_dialogue_from_llm(self, last_dialogue: ConversationTurn) -> bool:
-        return last_dialogue.speaker == Speaker.AGENT
-
-    def get_last_dialogue(self) -> ConversationTurn:
-        return self.conversation_history[-1]
