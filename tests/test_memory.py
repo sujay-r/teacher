@@ -1,5 +1,3 @@
-import pytest
-
 from app.core.memory import ConversationMemory
 from app.models.chat import ConversationTurn
 from app.models.enums import Speaker
