@@ -1,4 +1,3 @@
-# TODO: Write unit tests for dialogue validation
 import pytest
 from pydantic import ValidationError
 from app.models.chat import ConversationTurn
