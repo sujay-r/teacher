@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Optional
 
-from app.models.chat import Dialogue
+from app.models.chat import ConversationTurn
 from app.models.enums import Speaker
 
 
@@ -23,14 +23,14 @@ class ConversationMemory(Memory):
         return ConversationMemory(existing_history=processed_history)
 
     @staticmethod
-    def normalize_raw_conversation_history(conversation_history: List[Dict[str, str]]) -> List[Dialogue]:
-        return [Dialogue(**item) for item in conversation_history]
+    def normalize_raw_conversation_history(conversation_history: List[Dict[str, str]]) -> List[ConversationTurn]:
+        return [ConversationTurn(**item) for item in conversation_history]
     
     @staticmethod
-    def denormalize_conversation_history(conversation_history: List[Dialogue]) -> List[Dict[str, str]]:
+    def denormalize_conversation_history(conversation_history: List[ConversationTurn]) -> List[Dict[str, str]]:
         return [item.model_dump(by_alias=True) for item in conversation_history]
 
-    def add_object_to_memory(self, object: Dialogue) -> None:
+    def add_object_to_memory(self, object: ConversationTurn) -> None:
         self.conversation_history.append(object)
     
     def get_last_llm_response(self) -> str:
@@ -42,8 +42,8 @@ class ConversationMemory(Memory):
 
         return llm_response
 
-    def is_dialogue_from_llm(self, last_dialogue: Dialogue) -> bool:
+    def is_dialogue_from_llm(self, last_dialogue: ConversationTurn) -> bool:
         return last_dialogue.speaker == Speaker.AGENT
 
-    def get_last_dialogue(self) -> Dialogue:
+    def get_last_dialogue(self) -> ConversationTurn:
         return self.conversation_history[-1]

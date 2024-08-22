@@ -5,7 +5,7 @@ class Message(BaseModel):
     message: str
 
 
-class Dialogue(BaseModel):
+class ConversationTurn(BaseModel):
     speaker: str = Field(..., alias='role')
     message: str = Field(..., alias='content')
 
