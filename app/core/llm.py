@@ -1,9 +1,24 @@
+from abc import ABC, abstractmethod
 from typing import Dict
 from openai import OpenAI
 
 client = OpenAI()
 
 chat_history = []
+
+
+class LLM(ABC):
+    @abstractmethod
+    def call_llm(self, messages: Dict[str, str]) -> None:
+        '''Sends a message to the LLM'''
+
+
+class OpenAILLM(LLM):
+    def __init__(self, openai_client: OpenAI) -> None:
+        self.openai_client = openai_client
+    
+    def call_llm(self, messages: Dict[str, str]) -> None:
+        pass
 
 
 def get_llm_response(user_message: str) -> str:
