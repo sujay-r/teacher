@@ -1,6 +1,7 @@
-from openai import OpenAI
-from typing import Dict, Optional
 from abc import ABC, abstractmethod
+from typing import Dict, Optional
+
+from openai import OpenAI
 
 
 class LLM(ABC):

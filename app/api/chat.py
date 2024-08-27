@@ -1,11 +1,10 @@
-from openai import OpenAI
 from fastapi import APIRouter
+from openai import OpenAI
 
-from app.models.chat import Message
-from app.core.llm import get_llm_response
+from app.core.conversation import Conversation
 from app.core.llm import OpenAILLM
 from app.core.memory import ConversationMemory
-from app.core.conversation import Conversation
+from app.models.chat import Message
 
 router = APIRouter(prefix='/api/chat')
 

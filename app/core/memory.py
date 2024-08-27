@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
 
 from app.models.chat import ConversationTurn
 from app.models.enums import Speaker
@@ -10,9 +10,6 @@ class Memory(ABC):
     def add_object_to_memory(self, object: Dict[str, str]) -> None:
         '''Adds given object to memory'''
 
-
-def default_conversation_history() -> list:
-    return []
 
 class ConversationMemory(Memory):
     def __init__(self, existing_history: Optional[List[ConversationTurn]]=None) -> None:

@@ -1,5 +1,6 @@
+from pydantic import BaseModel, Field, ValidationInfo, field_validator
+
 from app.models.enums import Speaker
-from pydantic import BaseModel, Field, field_validator, ValidationInfo
 
 
 class Message(BaseModel):
