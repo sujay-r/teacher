@@ -4,12 +4,11 @@ from app.models.enums import Speaker
 
 
 class Message(BaseModel):
-    message: str
-
-
-class ConversationTurn(BaseModel):
-    speaker: str = Field(..., alias='role')
     message: str = Field(..., alias='content')
+
+
+class ConversationTurn(Message):
+    speaker: str = Field(..., alias='role')
 
     @field_validator("speaker")
     @classmethod
