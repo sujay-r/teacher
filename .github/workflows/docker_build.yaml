@@ -47,5 +47,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/your-repository-name:${{ steps.docker_tags.outputs.tag }}
-            ${{ secrets.DOCKER_HUB_USERNAME }}/your-repository-name:${{ steps.docker_tags.outputs.version_tag }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/teacher:${{ steps.docker_tags.outputs.tag }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/teacher:${{ steps.docker_tags.outputs.version_tag }}
