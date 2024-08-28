@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
 
+from app.models import ConversationTurnFactory
 from app.models.chat import ConversationTurn
 from app.models.enums import Speaker
 
@@ -19,38 +20,33 @@ class ConversationMemory(Memory):
 
     @staticmethod
     def initialise_from_existing_conversation_history(conversation_history: List[Dict[str, str]]) -> 'ConversationMemory':
-        processed_history = ConversationMemory.normalize_raw_conversation_history(conversation_history)
+        processed_history = ConversationTurnFactory.create_message_array(conversation_history)
         return ConversationMemory(existing_history=processed_history)
-
-    @staticmethod
-    def normalize_raw_conversation_history(conversation_history: List[Dict[str, str]]) -> List[ConversationTurn]:
-        return [ConversationTurn(**item) for item in conversation_history]
 
     def get_conversation_history_for_llm_call(self) -> List[Dict[str, str]]:
         return ConversationMemory.denormalize_conversation_history(
             self.conversation_history
         )
 
+    # TODO: Look into how cohesive this method really is to this class.
     @staticmethod
     def denormalize_conversation_history(conversation_history: List[ConversationTurn]) -> List[Dict[str, str]]:
         return [item.model_dump(by_alias=True) for item in conversation_history]
+    
+    # TODO: Think about whether this abstraction even makes sense
+    # (Since it's a wrapper around the abstract interface itself)
+    # (Look into whether the abstract interface needs to be redesigned properly or not)
+    def add_user_message_to_memory(self, user_message: str) -> None:
+        self.add_message_to_memory(user_message, Speaker.HUMAN.value)
+
+    def add_llm_message_to_memory(self, llm_message: str) -> None:
+        self.add_message_to_memory(llm_message, Speaker.AGENT.value)
+
+    def add_message_to_memory(self, message, speaker):
+        conversation_turn = ConversationTurnFactory.create_message(
+            content=message, role=speaker
+        )
+        self.add_object_to_memory(conversation_turn)
 
     def add_object_to_memory(self, object: ConversationTurn) -> None:
         self.conversation_history.append(object)
-
-    # TODO: Address the code duplication between the add_user_message and add_llm_message methods.
-    def add_user_message_to_memory(self, user_message: str) -> None:
-        user_turn = self.create_user_turn_from_message(user_message)
-        self.add_object_to_memory(user_turn)
-
-    def add_llm_message_to_memory(self, llm_message: str) -> None:
-        llm_turn = self.create_llm_turn_from_message(llm_message)
-        self.add_object_to_memory(llm_turn)    
-
-    # TODO: Abstract this responsibility to a data factory class
-    def create_user_turn_from_message(self, user_message: str) -> ConversationTurn:
-        return ConversationTurn(role=Speaker.HUMAN.value, content=user_message)
-
-    # TODO: Abstract this responsibility to a data factory class
-    def create_llm_turn_from_message(self, llm_response: str) -> ConversationTurn:
-        return ConversationTurn(role=Speaker.AGENT.value, content=llm_response)

@@ -33,17 +33,6 @@ class TestConversationMemory:
         assert memory.conversation_history[0].speaker == Speaker.AGENT.value
         assert memory.conversation_history[0].message == "Hi! How can I help you?"
 
-    def test_normalize_raw_conversation_history(self):
-        raw_history = [
-            {"role": Speaker.HUMAN.value, "content": "Hello!"},
-            {"role": Speaker.AGENT.value, "content": "Hi! How can I help you?"},
-        ]
-        normalized = ConversationMemory.normalize_raw_conversation_history(raw_history)
-        assert len(normalized) == 2
-        assert isinstance(normalized[0], ConversationTurn)
-        assert normalized[0].speaker == Speaker.HUMAN.value
-        assert normalized[1].speaker == Speaker.AGENT.value
-
     def test_denormalize_conversation_history(self):
         conversation_turns = [
             ConversationTurn(role=Speaker.HUMAN.value, content="Hello!"),
